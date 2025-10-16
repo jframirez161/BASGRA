@@ -1,0 +1,2070 @@
+<html>
+<title>BASGRA</title> 
+   
+<!-- texto fantasma -->
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript" src="js/jquery.livequery.js"></script>
+<script type="text/javascript" src="js/ghosttext.js"></script>
+
+<!-- Gráfica -->
+<link href="css/examples.css" rel="stylesheet" type="text/css">
+<script language="javascript" type="text/javascript" src="js/jquery.js"></script>
+<script language="javascript" type="text/javascript" src="js/jquery.flot.js"></script>
+<script language="javascript" type="text/javascript" src="js/jquery.flot.time.js"></script>
+  
+ 
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Fonts -->
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Dosis:400,700' rel='stylesheet' type='text/css'>
+
+        <!-- Bootsrap -->
+        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+
+        <!-- Font awesome -->
+        <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+
+        <!-- Owl carousel -->
+        <link rel="stylesheet" href="assets/css/owl.carousel.css">
+
+        <!-- Template main Css -->
+        <link rel="stylesheet" href="assets/css/style.css">
+        
+        <!-- Modernizr -->
+        <script src="assets/js/modernizr-2.6.2.min.js"></script>
+
+<style>
+#help_div{
+	position:fixed;
+	display:none;
+	left:300px;
+	z-index:100;
+	background-color:#ffffff;
+	width:400px;
+	height:300px;
+	border-style:solid;
+	border-width:1px;
+	padding:5px;
+	background-color:#75a33f;
+	}
+span{
+	background-color:#ffffff;
+	margin:0px 10px;
+	padding:0px 10px;
+	}
+
+#map_canvas {
+	height:500px;
+	width:940px;
+	position:relative;
+	}
+    
+#embed-map-display img
+    {max-width:none!important;
+     background:none!important;
+     font-size: inherit;}
+					    
+
+#output_table, #test_div{
+	position:relative;
+	background-color:#75a33f;
+	width:940px;
+    font-size-adjust: 
+    }
+
+#address_to_find{
+	width:400px;
+	}
+#map_canvas, #output_table, #test_div, #containing_table{
+	position:relative;
+	left:0%;
+	margin:auto;
+    }
+#check_box{
+	float:right;
+	cursor:pointer;
+	border-style:solid;
+	border-width:1px;
+	}
+
+</style>
+    
+ 
+     <!-- NAVBAR
+    ================================================== -->
+    <header class="main-header">    
+        <nav class="navbar navbar-static-top">
+            <div class="navbar-top">
+              <div class="container">
+                  <div class="row">
+                    <div class="col-sm-6 col-xs-12">
+                        <ul class="list-unstyled list-inline header-contact">
+                            <li> <i class=""></i>  </li>
+                             <li> <i class=""></i>  </li>
+                       </ul> <!-- /.header-contact  -->                      
+                    </div>
+                    <div class="col-sm-6 col-xs-12 text-right">
+                        <ul class="list-unstyled list-inline header-social">
+                        <li><a href="#" target="_blank"> <i class="fa fa-facebook"></i></a></li>
+                        <li><a href="#" target="_blank"> <i class="fa fa-twitter"></i></a></li>
+                        <li><a href="#" target="_blank"> <i class="fa fa-google"></i></a></li>
+                        <li><a href="#" target="_blank"> <i class="fa fa-youtube"></i></a></li>
+                        <li><a href="#" target="_blank"> <i class="fa fa fa-pinterest-p"></i></a> </li>
+
+                       </ul> <!-- /.header-social  -->                      
+                    </div>
+                  </div>
+              </div>
+            </div>
+            <div class="navbar-main">              
+              <div class="container">
+                <div class="navbar-header">
+                  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>                  
+                  <a class="navbar-brand" href="index.html"><img src="assets/images/sadaka-logo.png" alt=""></a>                  
+                </div>
+                <div id="navbar" class="navbar-collapse collapse pull-right">
+                  <ul class="nav navbar-nav">
+                    <li><a class="is-active" href="index.html">BASGRA</a></li>
+                  </ul>
+                </div> <!-- /#navbar -->
+              </div> <!-- /.container -->              
+            </div> <!-- /.navbar-main -->
+        </nav> 
+    </header> <!-- /. main-header -->   
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+  
+<script>
+//<![CDATA[
+//******************************************************************************************************
+//*****  Written by Paul Wroe
+//*****  pwroe@atterbury.com
+//******************************************************************************************************
+
+//////////////////// variable initializations - global //////////////////////////////
+var point_place_object = new Object();			//not used
+point_place_object.points_array = new Array();	//not used
+
+var my_geocoder;
+var initial_center_of_map = new google.maps.LatLng(6.445124, -75.544684);
+var initial_zoom_level = 17;
+var points_array = new Array();
+var marker_array = new Array();
+var click_polygon = new google.maps.Polygon;
+var click_line = new google.maps.Polyline;
+var new_marker = new google.maps.Marker;
+var calculated_acres;
+var calculated_length;
+var my_map;
+
+
+function initialize(){
+    
+  var map_options = {								//map options
+
+	scaleControl: true,
+	zoom: 17,
+	center: new google.maps.LatLng(6.445124, -75.544684),
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+};  
+    
+    
+	my_geocoder = new google.maps.Geocoder();
+	my_map = new google.maps.Map(document.getElementById("map_canvas"),map_options);//this needs to be global
+	google.maps.event.addListener(my_map, 'click', function(mouse_was_clicked) {on_click_function(mouse_was_clicked.latLng);} );//listener does not fire on polygons
+	google.maps.event.addListener(my_map, 'mousemove', function(mouse_location) {mouse_was_moved(mouse_location.latLng);} );//listener does not fire on polygons
+	load_points();// load points if comming back from upload
+}// end initialize
+
+function on_click_function(location_passed){
+	click_polygon.setMap(null);								//	clears click_polygon from map
+	click_line.setMap(null);								//	clears click_line from map
+	points_array.push(location_passed);						//	push clicked lat lng into points array
+	if (document.getElementById("polygon_mode").checked){	//	create (or recreate) the click_polygon object
+		create_polygon();
+		click_polygon.setMap(my_map);
+	}
+	if (document.getElementById("line_mode").checked){		//	create or recreate the click_line
+		create_line();
+		click_line.setMap(my_map);
+	}
+	clear_markers();
+	rewrite_markers();
+	calculate_dimensions_and_display();
+}// end on_click_function
+
+function create_polygon(){
+	click_polygon = new google.maps.Polygon({
+		paths: points_array,
+		strokeColor: "#FF0000",
+		strokeOpacity: 0.8,
+		strokeWeight: 2,
+		fillColor: "#FF0000",
+		fillOpacity: 0.35
+	});
+}
+
+function create_line(){
+	click_line = new google.maps.Polyline({
+    path: points_array,
+    strokeColor: "#0000ff",
+    strokeOpacity: 1.0,
+    strokeWeight: 2
+  });
+}
+
+function rewrite_markers(){
+	for(var m= 0; m < points_array.length; m++) {							//loop through point array, making markers
+		new_marker = new google.maps.Marker({
+			position: points_array[(m)],
+			draggable:true,
+			map: my_map,												
+			// can add arbitrary properties to marker here
+			index_number: m,
+			title: "index "+m
+		});
+		
+		marker_array.push(new_marker);
+		google.maps.event.addListener(new_marker, 'click', function (){ marker_was_clicked (this) } ); // here is a convoluted one to increase scope!!!
+		google.maps.event.addListener(new_marker, 'dragend', function (){ marker_was_dragged (this) } );
+	}//end for
+}// end rewrite_markers
+
+function clear_markers(){
+	for(var m= 0; m < marker_array.length; m++) {					
+		marker_array[m].setMap(null);
+	}
+	marker_array = [];
+}
+
+function marker_was_clicked (marker_object) {
+	points_array.splice(marker_object.index_number,1);
+	if (document.getElementById("polygon_mode").checked){
+		click_polygon.setMap(null);	//clears polygon
+		click_polygon.setMap(my_map);	//writes polygon
+	}
+	if (document.getElementById("line_mode").checked){
+		click_line.setMap(null);
+		click_line.setMap(my_map);
+	}
+	clear_markers();
+	rewrite_markers();
+	calculate_dimensions_and_display();
+}// end marker_was_clicked
+
+function marker_was_dragged(marker_object){
+	points_array.splice(marker_object.index_number,1);// removes point
+	points_array.splice(marker_object.index_number,0,marker_object.getPosition());// adds updated point
+	if (document.getElementById("polygon_mode").checked){
+		click_polygon.setMap(null);	//clears polygon
+		click_polygon.setMap(my_map);	//writes polygon
+	}
+	if (document.getElementById("line_mode").checked){
+		click_line.setMap(null);
+		click_line.setMap(my_map);
+	}
+	clear_markers();
+	rewrite_markers();
+	calculate_dimensions_and_display();
+}
+
+function calculate_dimensions_and_display(){
+	calculated_acres = ((google.maps.geometry.spherical.computeArea(points_array)/(1000*1000)*247.105381)*4046.86);
+	calculated_acres = calculated_acres.toFixed(2);
+	calculated_length = (((google.maps.geometry.spherical.computeLength(points_array))/1000*.621371192)*1609.34);
+	calculated_length = calculated_length.toFixed(2);
+	if (document.getElementById("polygon_mode").checked){
+		document.getElementById("area").innerHTML = calculated_acres+" m2";
+	}
+	if (document.getElementById("line_mode").checked){
+		document.getElementById("area").innerHTML = calculated_length+" metros";
+	}
+}
+
+function mode_was_changed(){
+	click_polygon.setMap(null);								//	clears click_polygon from map
+	click_line.setMap(null);								//	clears click_line from map
+	if (document.getElementById("polygon_mode").checked){	//	create (or recreate) the click_polygon object
+		create_polygon();
+		click_polygon.setMap(my_map);
+	}
+	
+	if (document.getElementById("line_mode").checked){		//	create or recreate the click_line
+		create_line();
+		click_line.setMap(my_map);
+	}
+	calculate_dimensions_and_display();
+}
+
+function clear_map(){//removes markers, removes polygon, removes line, sets points array to null
+	clear_markers();
+	click_polygon.setMap(null);
+	click_line.setMap(null);
+	points_array = [];
+	calculate_dimensions_and_display();
+}
+
+function mouse_was_moved(mouse_move_location){
+	
+	var mouse_latitude = mouse_move_location.lat();
+	mouse_latitude = mouse_latitude.toFixed(3);
+	var mouse_longitude = mouse_move_location.lng();
+	mouse_longitude = mouse_longitude.toFixed(3);
+	
+	document.getElementById("mouse_location").innerHTML = mouse_latitude+" "+mouse_longitude;
+
+}
+
+function find_address(){
+	var my_address = document.getElementById("address_to_find").value;
+    my_geocoder.geocode( { 'address': my_address}, function(results, status) {
+		if (status == google.maps.GeocoderStatus.OK){
+			my_map.setCenter(results[0].geometry.location);
+			points_array.push(results[0].geometry.location);		//	push returned lat lng into points array
+			click_polygon.setMap(null);								//	clears click_polygon from map
+			click_line.setMap(null);								//	clears click_line from map
+			if (document.getElementById("polygon_mode").checked){	//	create (or recreate) the click_polygon object
+				create_polygon();
+				click_polygon.setMap(my_map);
+			}
+			if (document.getElementById("line_mode").checked){		//	create or recreate the click_line
+				create_line();
+				click_line.setMap(my_map);
+			}
+			clear_markers();
+			rewrite_markers();
+			calculate_dimensions_and_display();
+		}
+		else{
+			alert("Geocode was not successful for the following reason: " + status);
+		}
+	});
+}
+
+function enter_key_as_submit(event){// note, must pass event, not 'this' to this function
+	if (event.keyCode == 13){
+		find_address()
+	}
+}
+
+function help_window(){
+	document.getElementById("help_div").style.display = "block";
+}
+
+function close_help_window(){
+	document.getElementById("help_div").style.display = "none";
+}
+function load_points(){
+	
+	clear_map();
+	
+		
+	if (points_array.length>0){
+
+		if (document.getElementById("polygon_mode").checked){	//	create (or recreate) the click_polygon object
+			create_polygon();
+			click_polygon.setMap(my_map);
+		}
+		if (document.getElementById("line_mode").checked){		//	create or recreate the click_line
+			create_line();
+			click_line.setMap(my_map);
+		}
+		clear_markers();
+		rewrite_markers();
+		calculate_dimensions_and_display();
+		bounding_box();
+
+	}	
+
+}
+
+function bounding_box(){
+
+	if (points_array.length > 0){
+		var bounds = new google.maps.LatLngBounds();
+		for (var i = 0; i < (points_array.length); i++) {
+			bounds.extend(points_array[i]);
+		}
+		my_map.fitBounds(bounds);// zooms to box
+	}
+}
+
+function submit_points_array(){
+
+	var point_string = "";
+	for (var i = 0; i < (points_array.length); i++) {	// comma between point pairs, but not after the last one
+		point_string = point_string+points_array[i];
+		
+		if (points_array.length > (i+1) ){
+			point_string = point_string+",";
+		}
+	}
+
+	document.getElementById("point_string_variable").value = point_string;
+	document.getElementById("download_file").method = "post";
+	document.getElementById("download_file").action = "google_map_includes/generate_kmz.php";
+	document.getElementById("download_file").submit();
+
+}
+
+</script>
+
+ 
+
+<body onload="initialize()">    
+        
+   	
+<center>
+<p>BASGRA es una herramienta que permite estimar la cantidad de biomasa producida en una area y periodo de tiempo determinado.</p> 
+<p>Este modelo ha sido ajustado para predecir el crecimiento del pasto KIKUYO bajos distintas condiciones ambientales.</p>
+
+	
+<p>INSTRUCCIONES</p>
+<p>1. Para una mejor visualización, seleccione la opción "Satélite" en la esquina superior izquierda del mapa. </p>
+<p>2. Con ayuda del mouse, busque el area de interes. Puede ampliar el mapa con el boton medio del mouse o la tecla "+". </p>
+<p>3. Haciendo click con el mouse sobre el mapa, podrá seleccionar el area de interes. Haciendo click en el boton "Limpiar Mapa", podrá realizar una nueva selección de área.</p>
+<p>CONTINUE LEYENDO LAS INSTRUCCIONES MAS ABAJO</p></center>
+	
+<div>        
+    <div id="help_div"> <!-- HELPER-->
+        <div id="check_box" onclick="close_help_window()">X</div>
+        <p>AYUDAS</p>
+    </div>
+			
+			<table id="output_table" style="width: 80%"> <!-- Tabla superior MAPA -->
+		
+					<td><input type="button" value="Limpiar Mapa" onclick="clear_map();">
+					</td>
+					<td><input type="radio" name="draw_mode" id="polygon_mode" onclick="mode_was_changed();" checked="checked"> Area </td>
+					<td><input type="radio" name="draw_mode" id="line_mode" onclick="mode_was_changed();"> Distancia
+					</td>
+					<td>Area/Distance<span id="area">00.00 m2</span>
+					</td>
+					<td>Localización del Mouse <span id="mouse_location">6.445124 -75.544684</span>
+					</td>
+					<td><input type="button" value="Ayuda" onclick="help_window();">
+            </table> 
+			
+			<!-- MAPA -->			
+			<div id="map_canvas" style="width: 80%"></div>
+			
+						
+			<div id="test_div" style="width: 80%"> <!-- Tabla inferior MAPA -->
+				<input type="button" value="Buscar ubicación" onclick="find_address();">
+				<input type="text" name="address_to_find" id="address_to_find" onkeydown="enter_key_as_submit(event)">
+			</div>
+		
+
+</div>
+
+
+<center>  
+<p>BASGRA estima el desarrollo del pasto a partir de las condiciones climáticas, observadas dia a dia, durante el periodo de crecimiento</p>
+<p>Por esto, es necesario que el usuario de BASGRA registre, tabule e ingrese la siguiente información: </p>
+<p>Día, Temperatura maxima (ºC), Temperatura mínima (ºC), Humedad relativa (%), Precipitación (mm), Velocidad del viento (m/seg) y Radiación solar (MJ/m2/día)</p>
+<p>del periodo que desea estimar.En el siguiente cuadro puede observar la forma correcta de ingresar la información</p>
+<p>4. Al hacer click dentro del cuadro para los datos, estos se borrarán; y usted podrá "pegar" dentro de la tabla su propia información.</p>
+<p>Antes de ingresar los datos, estos deben ser cuidadosamente organizados en una herramieta de edición como "Excel".</p>
+ <p>5. Haga click sobre el botón "Calcular" y BASGRA estimará los Kilos de materia seca de Hojas, Hojas muertas y Tallos producidos en el área seleccionada. </p>
+<p>6. Haciendo click sobre la palabra "REINICIAR" podrá realizar una nueva estimación.</p>
+</center>                
+
+ 
+    
+<!-- EMPIEZA BASGRA TODO -->
+
+<script src="js/excel2array.js"></script>
+
+<table id="output_table" style="width: 80%">
+
+<td> <!-- DATOS -->
+
+<textarea name="textbox" id="textbox" rows="10" autofocus="autofocus" style="height: 500px; width: 700px;" 
+    
+ghost='
+día	ºC_max   ºC_min     HR(%)	       mm	         Viento(m/seg)       Rad(MJ/m2/día)
+01	18.2	        10.4	        68.0	        02.4	        04.7	                00.9
+02	23.1	        10.1	        58.9	        10.8	        04.8	                01.0
+03	18.3	        11.9	        57.5	        12.6	        04.7	                01.9
+04	23.6	        09.9	        61.2	        09.6	        02.8	                01.4
+05	20.3	        08.9	        60.5	        11.6	        03.7	                00.8
+06	24.0	        07.3	        69.9	        17.3	        04.2	                01.9
+07	20.8	        07.7	        55.8	        11.4	        04.8	                01.6
+08	22.1	        11.9	        59.3	        05.4	        04.7	                01.3
+09	20.7	        07.6	        59.7	        03.6	        03.2	                01.1
+10	21.2	        11.3	        60.6	        10.9	        03.1	                01.4
+11	23.1	        11.2	        55.0	        15.9	        02.6	                01.5
+12	22.7	        11.5	        67.3	        15.0	        04.9	                00.8
+13	22.1	        10.6	        64.9	        08.0	        00.8	                01.1
+14	18.5	        11.4	        64.4	        16.1	        04.9	                01.3
+15	21.1	        07.6	        64.3	        14.5	        03.4	                00.9
+15	21.1	        07.6	        64.3	        14.5	        03.4	                00.9
+16	20.4	        07.7	        61.2	        00.7	        02.5	                01.4
+17	20.4	        10.2	        66.3	        06.7	        04.3	                00.8
+18	24.1	        11.6	        62.1	        13.0	        01.4	                00.8
+19	19.5	        09.2	        69.7	        19.0	        04.0	                01.1
+20	18.8	        09.4	        68.5	        09.1	        01.4	                01.9
+21	21.2	        09.5	        61.5	        14.5	        04.8	                01.9
+22	20.3	        09.7	        61.4	        19.6	        03.2	                02.0
+23	18.8	        10.8	        64.0	        10.7	        01.7	                01.9
+24	21.2	        10.2	        64.9	        03.4	        02.8	                01.3
+25	23.3	        10.9	        67.0	        04.0	        02.0	                01.7
+26	21.2	        09.4	        57.0	        09.3	        00.9	                00.9
+27	24.5	        08.6	        66.5	        04.2	        00.9	                01.0
+28	22.2	        10.3	        55.8	        02.5	        01.9	                01.1
+29	20.8	        09.9	        62.2	        09.2	        00.9	                00.5
+30	20.5	        11.3	        59.0	        17.1	        00.9	                01.0
+31	24.9	        11.0	        65.2	        15.0	        03.5	                01.5
+32	18.9	        11.1	        61.1	        12.3	        03.0	                01.5
+33	21.4	        10.1	        65.3	        18.2	        02.2	                01.8
+34	19.1	        11.4	        69.0	        14.0	        04.9	                00.9
+35	23.6	        11.5	        56.0	        04.5	        04.4	                01.4
+'></textarea>
+</td>
+    
+
+
+<td valign="top">
+
+    <div id="array_options" style="display:block">
+        <input type="checkbox" name="quote" id="double_quote" checked="" onclick="convert_it(array_type)">
+        <input type="checkbox" id="newlines" value="1" checked="" onclick="convert_it(array_type)">
+        <input type="checkbox" id="blank_fields" value="1" checked="" onclick="convert_it(array_type)">
+        <input type="checkbox" id="numbers_to_string" value="1"  onclick="convert_it(array_type)">
+    </div>
+
+    <div id="associative_options">
+        <input type="checkbox" name="assoc" id="js" checked="" onclick="convert_it(3)">
+        <input type="checkbox" name="keys" id="top" checked="" onclick="convert_it(3)">
+    </div>
+
+
+
+</td> <!-- FIN DATOS -->
+    
+     
+
+<td >
+
+<p><input type="button" name="convert" value="Calcular" onclick="convert_it(2); document.getElementById(&#39;array_options&#39;).style.display = &#39;block&#39;; myFunction1(); basgra(); grafica()"></p>
+
+<p><a href="index.html">REINICIAR</a></p>
+
+
+		<div class="demo-container">
+			<div id="placeholder" class="demo-placeholder" style="width:100%;"></div>
+			<p id="choices" style="float:right; width:135px;"></p>
+		</div>
+
+	    <CENTER>
+	    <p>Hojas (Kg MS) = <output id ="hojas" ></output></p>
+	    <p>Hojas Muertas (Kg MS) = <output id ="hojas_M"></output></p>
+	    <p>Tallos (Kg MS) = <output id ="tallos"></output></p>
+	    </CENTER>
+
+</td>    
+</table>   
+  <br>  
+     <footer class="main-footer">
+        <div class="footer-top">            
+        </div>
+                <div class="footer-main">
+            <div class="container">                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="footer-col">
+                            <h2 class="footer-title">Información adicional <span class="title-under"></span></h2>
+                            <div class="footer-content">
+                                <p><strong>______</strong> ____.</p>                               
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="footer-col">
+                            <h2 class="footer-title">Creditos para códigos utilizados <span class="title-under"></span></h2>
+                            <div class="footer-content">
+                                <ul class="tweets list-unstyled">
+                                    <li class="tweet"> 
+                                        WEB Template:   <p>Sadaka @ copyrights 2015 - by <a href="http://www.ouarmedia.com" target="_blank">Ouarmedia</a></p>
+                                    </li>
+                                    <li class="tweet"> 
+                                        Graphs: 
+                                        <p>Copyright &copy; 2007 - 2014
+                                        <a href="http://www.flotcharts.org/" target="_blank">IOLA and Ole Laursen</a>                                        
+                                        </p>
+                                    </li>
+                                    <li class="tweet"> 
+                                        GPS: 	<p> Data capture from Copyright 2014 by 
+                                        <a href="http://www.seabreezecomputers.com/excel2array/" target="_blank">Jeff Baker</a></p>       
+                                        <p>Area Calculator Contents ©2016,   <a href="http://www.atterbury.com/google_maps_acreage_calculator.html" target="_blank">Atterbury Consultants, Inc.</a>
+                                    </li>
+                                </ul>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="footer-col">
+                            <h2 class="footer-title">Contactenos <span class="title-under"></span></h2>
+                            <div class="footer-content">
+                                <div class="footer-form" >                                    
+                                    <form action="php/mail.php" class="ajax-form">
+                                        <div class="form-group">
+                                            <input type="text" name="name" class="form-control" placeholder="Nombre" required>
+                                        </div>
+                                         <div class="form-group">
+                                            <input type="email" name="email" class="form-control" placeholder="E-mail" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <textarea name="message" class="form-control" placeholder="Mensaje" required></textarea>
+                                        </div>
+                                        <div class="form-group alerts">                        
+                                            <div class="alert alert-success" role="alert"> 
+                                            </div>
+                                            <div class="alert alert-danger" role="alert"> 
+                                            </div>                                            
+                                        </div>
+                                         <div class="form-group">
+                                            <button type="submit" class="btn btn-submit pull-right">Enviar mensaje</button>
+                                        </div>                                        
+                                    </form>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div> 
+            </div>            
+        </div>
+        <div class="footer-bottom">
+            <div class="container text-right">              
+            </div>
+        </div>        
+    </footer>      
+    
+    
+    
+    
+    
+</body>
+    
+<BR></BR>  
+    
+    
+    
+<script >    
+var array_doble = [[],[]];  
+var array_simple = [];
+var hojas = [];
+var hojas_muertas = [];
+var tallos = [];
+
+var NDAYS ;
+var NOUT ; 
+var y = [,];
+
+    
+    function myFunction1() // Esta funcion llena un array 2d con los datos del cuadro de texto
+{
+    
+var texto = document.getElementById('textbox').value;   
+array_simple  = texto.split(",");   
+var counter = 0;        
+        
+   for (var j = 0; j < array_simple.length / 7; j++)  
+   {   
+     for (var i = 0; i < 8; i++)  
+        { 
+         array_doble [[j,i]] = array_simple[i + counter];
+         
+         }
+  counter = counter + 7; 
+
+   }
+    
+   
+}
+ 
+    
+
+    
+    // INICIA BASGRA
+    
+    
+            // Initial constants
+    var LOG10CLVI, LOG10CRESI, LOG10CRTI, LOG10LAII, CST_I;
+    var PHEN_I , TILTOTI , FRTILG_I, FRTILGG1I ;
+
+    // Initial constants, continued
+    var CLVD_I ; // no esta en parametros 
+    var YIELD_I ; // no esta en parametros 
+    var CSTUB_I ; // no esta en parametros
+    var LT50_I ;
+
+    // Process parameters
+    var CLAIV , COCRESMX , CSTAVM , DAYLB ;
+    var DAYLG1G2 , DAYLP , DLMXGE , FSLAMIN ; 
+    var FSMAX , HAGERE , K , KLUETILG , LAICR  , LAIEFT , LAITIL , LFWIDG;
+    var LFWIDV , NELLVM , PHENCR , PHY , RDRSCO , RDRSMX , RDRTEM , RGENMX ;
+    var RGRTG1G2 , ROOTDM , RRDMAX , RUBISC , SHAPE , SIMAX1T , SLAMAX , SLAMIN; 
+    var TBASE , TCRES , TOPTGE , TRANCO , YG ;
+    var RDRTMIN , TVERN ;
+
+    // Process parameters, continued
+    var Dparam , Hparam , KRDRANAER , KRESPHARD , KRSR3H ;
+    var LDT50A , LDT50B , LT50MN , LT50MX , RATEDMX ;
+    var RDRROOT ; // no esta en parametros
+    var RDRSTUB ;// no esta en parametros
+    var reHardRedDay ;
+    var reHardRedEnd ; // no esta en parametros
+    var THARDMX, TsurfDiff = 0.62279;
+
+      
+    // Simulation period and time step
+    var DELT ;
+
+    // Geography
+    var LAT ;
+
+    // Atmospheric conditions
+    var CO2A;
+
+    // Soil
+    var DRATE ;
+    var WCI ;
+    var FWCAD , FWCWP , FWCFC , FWCWET , WCST;
+
+
+    // Soil - WINTER PARAMETERS
+    var FGAS , FO2MX , gamma , KRTOTAER , KSNOW ;
+    var LAMBDAice ; // no estan en parametros
+    var LAMBDAsoil ;
+    var LatentHeat ; // no estan en parametros
+    var poolInfilLimit ; // no estan en parametros
+    var RHOnewSnow , RHOpack ;
+    var RHOwater ; // no estan en parametros
+    var SWret , SWrf , TmeltFreeze , TrainSnow ;
+    var WpoolMax ;
+
+    // Soil initial constants
+    var DRYSTOR_I ;
+    var Fdepth_I ;
+    var SDEPTH_I ;
+    var TANAER_I ;
+    var WAPL_I ;
+    var WAPS_I ;
+    var WAS_I ;
+    var WETSTOR_I ;
+
+    var IRRIGF ;
+
+    // Mathematical constants
+    var pi ;
+    var Freq ;
+    var Kmin ;
+    var Ampl ;
+    var a  ;     ///  aux 
+    var Bias ;
+    var b ;    ///  aux 
+    
+
+    var HARV, NOHARV;
+    var CRESMX, DAYLGE, FRACTV, GLV_SI, GST_SI, LERG, LERV, LUEMXQ, NELLVG, PHENRF, PHOT;
+    var RDRFROST, RDRT, RDRTOX, RESPGRT, RESPGSH, RESPHARD, RESPHARDSI, RESNOR, RLEAF, RplantAer, SLANEW;
+    var RATEH, reHardPeriod, TV2TIL;
+    var ALLOTOT, GRESSI, GLV, DLV, HARV_LV, HARV_ST, HARV_RE, GRES, RESMOB, GRT, DRT;
+    var GST, GSTUB, HARVLA, HARVTILG2, HARVPH, DLAI, DSTUB, DTILV;
+    var GLAI, GTILV, TILVG1, TILG1G2, DeHardRate, HardRate, DPHEN, GPHEN, dTANAER, LD50;
+
+
+    var RAIN, GR, TMMN, TMMX, VP, WN;
+
+    var INFIL, poolDrain, SnowMelt;
+    var Pwater;
+    var PINFIL;
+    var Psnow;
+    var DENSITY;
+    var PackMelt;
+    var FREEZEPL, THAWPS, reFreeze, poolInfil, Wremain;
+    var DAVTMP, DAYL, DTR, PAR, PERMgas, PEVAP, poolRUNOFF, PTRAN, RNINTC;
+    var runOn, StayWet, WmaxStore, Wsupply;
+    var doy;
+
+
+    var CLV_I, CRES_I, CRT_I, LAI_I, WCAD, WCWP, WCFC, WCWET;
+
+    var FO2, fPerm, Tsurf, WCL;
+    var Frate, O2IN, O2OUT;
+    var DRAIN, FREEZEL, IRRIG, RUNOFF, THAWS;
+
+    
+    var DTRINT, PARAV, PARINT, TRANRF;
+    var EVAP, TRAN, EXPLOR, RROOTD;
+     
+        
+    var day;
+      
+    // State variables
+    var CLV, CLVD, YIELD, CRES, CRT, CST, CSTUB, DRYSTOR, Fdepth, LAI, O2, LT50, PHEN;
+    var YIELD_LAST;
+    var ROOTD, Sdepth, TILG1, TILG2, TILV, TANAER, WAL, WAPL, WAPS, WAS, WETSTOR;
+    var VERN;
+    
+    function basgra()
+    
+    {
+       
+doy = 0.0;
+cosecha = 50;
+NDAYS = array_simple.length / 7;
+NOUT = 7; 
+        
+y = [NDAYS, NOUT]; ////////////  
+    
+
+CST_I = 0.0;
+PHEN_I = 0.01;
+FRTILG_I = 0.0;
+CLVD_I = 0.5; // no esta en parametros 
+YIELD_I = 0.0; // no esta en parametros 
+CSTUB_I = 0.0; // no esta en parametros
+LT50_I = -47.894;
+FSMAX = 0.693;
+TVERN = 20.0;
+RDRROOT = 0.001; // no esta en parametros
+RDRSTUB = 0.2;// no esta en parametros
+reHardRedEnd = 91.0; // no esta en parametros
+DELT = 1.0;
+LAT = 6.000000;
+CO2A = 350.0;
+DRATE = 50.0;
+WCI = 0.3;
+FWCAD = 0.011363636;
+FWCWET = 0.934782609;
+WCST = 0.44;
+LAMBDAice = 193540; // no estan en parametros
+LatentHeat = 335000; // no estan en parametros
+poolInfilLimit = 0.2; // no estan en parametros
+RHOwater = 1000; // no estan en parametros
+TmeltFreeze = 0;
+WpoolMax = 50;
+DRYSTOR_I = 0.0;
+Fdepth_I = 0.0;
+SDEPTH_I = 0.0;
+TANAER_I = 0.0;
+WAPL_I = 0.0;
+WAPS_I = 0.0;
+WAS_I = 0.0;
+WETSTOR_I = 0.0;
+IRRIGF = 0;
+pi = Math.PI;
+Freq = 2 * Math.PI / 365;
+Kmin = 4;
+Ampl = 0.625;
+a = Ampl;     /// OJOOO auxiliar 
+Bias = Kmin + Ampl;
+b = Bias;    /// OJOOO auxiliar   
+    
+    
+    
+LOG10CLVI = 1.13333333333333;
+LOG10CRESI = 0.183333333333333;
+LOG10CRTI = 0.666666666666667;
+LOG10LAII = -0.333333333333333;
+TILTOTI = 1400;
+CLAIV = 0.583333333333333;
+COCRESMX = 0.164680833333333;
+CSTAVM = 1;
+DAYLB = 0.392196968; //DAYLB debe ser menor que DAYL
+DAYLP = 0.649507333333333;
+DLMXGE = 0.663957865333333;
+FSLAMIN = 0.466634916;
+HAGERE = 0.833333333333333;
+K = 0.566666666666667;
+LAICR = 4.428305;
+LAIEFT = 0.233333333333333;
+LAITIL = 0.660864166666667;
+LFWIDG = 0.00994081666666667;
+LFWIDV = 0.00573854166666667;
+NELLVM = 2.21255666666667;
+PHENCR = 0.577743833333333;
+PHY = 73.5620666666667;
+RDRSCO = 0.0830954833333333;
+RDRSMX = 0.07;
+RDRTEM = 0.001196685;
+RGENMX = 0.0126929833333333;
+RRDMAX = 0.014;
+RUBISC = 6.74368333333333;
+SHAPE = 0.602786833333333;
+SIMAX1T = 0.00525523833333333;
+SLAMAX = 0.06;
+TBASE = 3.805415;
+TCRES = 2.20483666666667;
+TOPTGE = 14.9511333333333;
+TRANCO = 9.33333333333333;
+YG = 0.797255666666667;
+Dparam = 0.00272653333333333;
+FGAS = 0.4;
+FO2MX = 0.21;
+gamma = 65;
+Hparam = 0.0071975;
+KRDRANAER = 0.4;
+KRESPHARD = 0.0203333333333333;
+KRSR3H = 0.666666666666667;
+KRTOTAER = 2;
+KSNOW = 0.035;
+LAMBDAsoil = 172800;
+LDT50A = 1.3403;
+LDT50B = -2.1376;
+LT50MN = -28.8946333333333;
+LT50MX = -4.9298;
+RATEDMX = 2;
+reHardRedDay = 103.333333333333;
+RHOnewSnow = 100;
+RHOpack = 0.02;
+SWret = 0.1;
+SWrf = 0.01;
+THARDMX = 11.5684;
+TrainSnow = 0.01;
+TsurfDiff = 3.54093;
+KLUETILG = 0.5;
+ROOTDM = 0.761061748;
+FWCWP = 0.125606060666667;
+FWCFC = 0.627272727333333;
+FRTILGG1I = 0.366666666666667;
+DAYLG1G2 = 0.533333333333333;
+RGRTG1G2 = 0.633333333333333;
+RDRTMIN = 0.01;
+
+        
+        
+        
+        
+    
+            // parametros();
+        
+   // Parameter transformations 
+   CLV_I = Math.pow(10, LOG10CLVI);
+   CRES_I = Math.pow(10, LOG10CRESI);
+   CRT_I = Math.pow(10, LOG10CRTI);
+   LAI_I = Math.pow(10, LOG10LAII);
+
+   WCAD = FWCAD * WCST;
+   WCWP = FWCWP * WCST;
+   WCFC = FWCFC * WCST;
+   WCWET = FWCWET * WCST;
+        
+            // Fin parametros();
+        
+    
+    CLV = CLV_I;
+    CLVD = CLVD_I;
+    YIELD = YIELD_I;
+    YIELD_LAST = YIELD_I;
+    CRES = CRES_I;
+    CRT = CRT_I;
+    CST = CST_I;
+    CSTUB = CSTUB_I;
+    DRYSTOR = DRYSTOR_I;
+    Fdepth = Fdepth_I;
+    LAI = LAI_I;
+    LT50 = LT50_I;
+    O2 = FGAS * ROOTDM * FO2MX * 1000.0 / 22.4;
+    PHEN = PHEN_I;
+    ROOTD = ROOTDM;
+    Sdepth = SDEPTH_I;
+    TANAER = TANAER_I;
+    TILG1 = TILTOTI * FRTILG_I * FRTILGG1I; //  Non-elongating generative tiller density (m-2)
+    TILG2 = TILTOTI * FRTILG_I * (1 - FRTILGG1I); // Elongating generative tiller density (m-2)
+    TILV = TILTOTI * (1 - FRTILG_I);
+    VERN = 0;
+    WAL = 1000 * ROOTDM * WCI;
+    WAPL = WAPL_I;
+    WAPS = WAPS_I;
+    WAS = WAS_I;
+    WETSTOR = WETSTOR_I;
+        
+    
+        
+      
+  for (day = 1; day < NDAYS; day++)
+        {
+          
+   // Environment
+           
+      //  set_weather_day();
+            
+            
+  doy = parseInt(array_doble [[day,0]]);     // day of the year (d)
+  TMMX = parseFloat(array_doble [[day,1]]);   // maximum (or average) temperature (degrees Celsius)
+  TMMN = parseFloat(array_doble [[day,2]]);   // minimum (or average) temperature (degrees Celsius)
+  VP = 0.0002;                              // vapour pressure (kPa)
+  RAIN = parseFloat(array_doble [[day,4]]);    // precipitation (mm d-1)	
+  WN = parseFloat(array_doble [[day,5]]);    // mean wind speed (m s-1)
+  GR = parseFloat(array_doble [[day,6]]);    // irradiation (MJ m-2 d-1)
+            
+            
+                  
+        DAVTMP = (TMMN + TMMX) / 2;
+        DTR = GR * Math.exp(-KSNOW * DRYSTOR);
+        PAR = 0.5 * 4.56 * DTR;
+
+           
+      //  Fin set_weather_day();
+            
+            
+    //    SoilWaterContent();
+         if (Fdepth < ROOTD)
+        {
+            WCL = WAL * 0.001 / (ROOTD - Fdepth);
+        }
+        else
+        {
+            WCL = 0.0;
+        }
+    //  fin SoilWaterContent();  
+            
+            
+          // Physics();
+         if (Fdepth > 0.0)
+        {
+            Tsurf = DAVTMP / (1.0 + 10.0 * (Sdepth / Fdepth));
+            fPerm = 0.0;
+        }
+        else
+        {
+            Tsurf = DAVTMP * Math.exp(-gamma * Sdepth);
+            fPerm = 1;
+        }
+            //fin Physics();
+            
+            
+            
+            
+       // FrozenSoil();
+         
+        var alpha, PFrate, WCeff;
+
+        // Determining the amount of solid water that contributes in transportation of heat to surface 'WCeff'
+
+        if (Fdepth > ROOTD)
+        {
+            WCeff = WCFC;
+        }
+        else if (Fdepth > 0.0)
+        {
+            WCeff = (0.001 * WAS) / Fdepth;
+        }
+        else
+        {
+            WCeff = WCL;
+        }
+
+        // Calculating potential frost rate 'PFrate'
+
+        //     if ((Fdepth == 0.).and.(Tsurf>0.)) then // No soil frost present AND no frost starting 
+
+        if (((Fdepth == 0.0) && (Tsurf > 0.0)) || (WCeff == 0.0))
+        {
+            PFrate = 0.0;                          // No soil frost present AND no frost starting
+        }
+        else
+        {
+            alpha = LAMBDAsoil / (RHOwater * WCeff * LatentHeat);
+            PFrate = Math.sqrt(Math.max(0.0, Math.pow(Fdepth, 2.0) - 2.0 * alpha * Tsurf)) - Fdepth;
+        }
+
+        if ((PFrate >= 0.0) && (Fdepth > 0.0) && (Fdepth < ROOTD))
+        {
+            Frate = PFrate * (0.001 * WAS / Fdepth) / WCFC;      //! Soil frost increasing
+        }
+        else if ((PFrate + Fdepth / DELT) < 0.0)
+        {
+            Frate = -Fdepth / DELT;                     //! Remaining soil frost thaws away
+        }
+        else
+        {
+            Frate = PFrate;
+        }
+        // fin FrozenSoil();
+   
+            
+         
+        //   MicroClimate();
+           
+      //  RainSnowSurfacePool();
+            
+            
+   
+        
+      //  precForm();
+   
+        
+        if (DAVTMP > TrainSnow)
+        {
+            Pwater = RAIN;
+            Psnow = 0.0;
+        }
+        else
+        {
+            Pwater = 0.0;
+            Psnow = RAIN;
+        }
+       //  fin precForm();
+            
+            
+            
+            
+   
+      /*  SnowMeltWmaxStore();
+        WETSTORdynamics();
+        LiquidWaterDistribution();
+        SnowDensity();
+        SnowDepthDecrease();*/
+   
+            
+     
+        var Melt;
+
+        Melt = b + a * Math.sin(Freq * (doy - (174.0 - 91.0)));
+
+        if (DAVTMP > TmeltFreeze)
+        {
+            SnowMelt = Math.max(0.0, Math.min(DRYSTOR / DELT, Melt * (DAVTMP - TmeltFreeze)));
+        }
+        else
+        {
+            SnowMelt = 0.0;
+        }
+
+        WmaxStore = DRYSTOR * SWret;
+   
+
+    
+        var reFreezeMax;
+
+        reFreezeMax = SWrf * (TmeltFreeze - DAVTMP);
+
+        if ((WETSTOR > 0.0) && (DAVTMP < TmeltFreeze))
+        {
+            reFreeze = Math.min(WETSTOR / DELT, reFreezeMax);
+        }
+        else
+        {
+            reFreeze = 0.0;
+        }
+        StayWet = WETSTOR / DELT - reFreeze;
+    
+
+   
+        var Wavail;
+
+        Wavail = StayWet + SnowMelt + Pwater;
+        Wremain = Math.min(Wavail, WmaxStore);
+        Wsupply = Wavail - Wremain;
+   
+
+    
+        var SWE;
+
+        SWE = DRYSTOR + WETSTOR;
+
+        if (Sdepth > 0.0)
+        {
+            DENSITY = Math.min(480.0, SWE / Sdepth);
+        }
+        else
+        {
+            DENSITY = 0.0;
+        }
+
+   
+
+    
+        
+        if (Sdepth > 0.0)
+        {
+            PackMelt = Math.max(0.0, Math.min(Sdepth / DELT, Sdepth * RHOpack - SnowMelt / DENSITY));
+        }
+        else
+        {
+            PackMelt = 0.0;
+        }
+
+         
+                    
+
+        RNINTC = Math.min(Wsupply, 0.25 * LAI);
+        PINFIL = Wsupply - RNINTC;
+
+        
+            
+        //    INFILrunOn();
+   
+        
+        if (Fdepth <= poolInfilLimit)
+        {
+            INFIL = PINFIL;
+        }
+        else
+        {
+            INFIL = 0.0;
+        }
+
+        runOn = PINFIL - INFIL;
+   //    fin INFILrunOn();
+            
+            
+            
+      //  SurfacePool();
+          
+
+        var eta, PIrate, poolVolRemain, poolWavail;
+
+        poolVolRemain = Math.max(0.0, WpoolMax - WAPL - WAPS);
+        poolInfil = Math.min(runOn, poolVolRemain);
+        poolRUNOFF = runOn - poolInfil;
+        poolWavail = poolInfil + WAPL / DELT;
+
+        if (poolWavail == 0.0)
+        {
+            poolDrain = 0.0;
+        }
+        else if (Fdepth <= poolInfilLimit)
+        {
+            poolDrain = poolWavail;
+        }
+        else
+        {
+            poolDrain = Math.max(0.0, Math.min(-Frate * 1000.0, poolWavail));
+        }
+
+        if ((Tsurf > 0.0) && (WAPL == 0.0) && (WAPS == 0.0))
+        {
+            PIrate = 0.0;
+        }
+        else
+        {
+            eta = LAMBDAice / (RHOwater * LatentHeat);                                         // [m2 C-1 day-1]
+            PIrate = (Math.sqrt(Math.max(0.0, Math.pow((0.001 * WAPS), 2.0) - 2.0 * eta * Tsurf * DELT))) / DELT - (0.001 * WAPS) / DELT; // [m day-1]
+        }
+
+        if (PIrate < 0.0)
+        {
+            FREEZEPL = 0.0;
+            THAWPS = Math.min(WAPS / DELT, - PIrate * 1000.0);
+        }
+        else
+        {
+            FREEZEPL = Math.max(0.0, Math.min(poolInfil + WAPL / DELT - poolDrain * DELT, PIrate * 1000.0));
+            THAWPS = 0.0;
+        }
+      //  fin SurfacePool();  
+            
+            
+                       
+            
+            
+
+        if (WAPS == 0.0)
+        {
+            PERMgas = 1.0;
+        }
+        else
+        {
+            PERMgas = 0.0;
+        }
+    
+         //  fin MicroClimate();    
+            
+            
+            
+         //  DDAYL();
+    //=============================================================================
+    // Calculate day length (d d-1) from Julian day and latitude (LAT, degN)
+    // Author - Marcel van Oijen (CEH-Edinburgh)
+    //=============================================================================
+    
+        
+        var DEC, DECC, RAD;
+
+        RAD = pi / 180.0;                                                    // (radians deg-1)
+        DEC = -Math.asin(Math.sin(23.45 * RAD) * Math.cos(2.0 * pi * (doy + 10.0) / 365.0));           // (radians)
+        DECC = Math.max(Math.atan(-1.0 / Math.tan(RAD * LAT)), Math.min(Math.atan(1.0 / Math.tan(RAD * LAT)), DEC)); // (radians)
+        DAYL = 0.5 * (1.0 + 2.0 * Math.asin(Math.tan(RAD * LAT) * Math.tan(DECC)) / pi);        // (d d-1) 
+       //  fin DDAYL();
+            
+            
+         //  PENMAN();
+           
+    //=============================================================================
+    // Calculate potential rates of evaporation and transpiration (mm d-1)
+    // Inputs: LAI (m2 m-2), DTR (MJ GR m-2 d-1), RNINTC (mm d-1)
+    // Inputs not in header: VP (kPa), WN (m s-1)
+    // Outputs: PEVAP & PTRAN (mm d-1)
+    // Author - Marcel van Oijen (CEH-Edinburgh)
+    //=============================================================================
+  
+
+        var BBRAD, BOLTZM, DTRJM2, LHVAP, NRADC, NRADS;
+        var PENMD, PENMRC, PENMRS, PSYCH, RLWN, SLOPE, SVP, WDF;
+
+        
+
+        DTRJM2 = DTR * Math.pow(1, 6);                                  // (J GR m-2 d-1)
+        BOLTZM = Math.pow(5.668, -8);                               // (J m-2 s-1 K-4)
+        LHVAP = Math.pow(2.4, 6);                                     // (J kg-1)
+        PSYCH = 0.067;                                                // (kPA degC-1))    
+        BBRAD = BOLTZM * Math.pow((DAVTMP + 273.0), 4.0) * 86400.0;            // (J m-2 d-1)
+        SVP = 0.611 * Math.exp(17.4 * DAVTMP / (DAVTMP + 239.0));  // (kPa)
+        SLOPE = 4158.6 * SVP / Math.pow((DAVTMP + 239), 2);                  // (kPA degC-1)
+        RLWN = BBRAD * Math.max(0.0, 0.55 * (1.0 - VP / SVP));                   // (J m-2 d-1)
+        NRADS = DTRJM2 * (1.0 - 0.15) - RLWN;                           // (J m-2 d-1)
+        NRADC = DTRJM2 * (1.0 - 0.25) - RLWN;                     // (J m-2 d-1)
+        PENMRS = NRADS * SLOPE / (SLOPE + PSYCH);                   // (J m-2 d-1)
+        PENMRC = NRADC * SLOPE / (SLOPE + PSYCH);                   // (J m-2 d-1)
+        WDF = 2.63 * (1.0 + 0.54 * WN);                      // (kg m-2 d-1 kPa-1)
+        PENMD = LHVAP * WDF * (SVP - VP) * PSYCH / (SLOPE + PSYCH);  // (J m-2 d-1)
+        PEVAP = Math.exp(-0.5 * LAI) * (PENMRS + PENMD) / LHVAP; // (mm d-1)
+        PTRAN = (1.0 - Math.exp(-0.5 * LAI)) * (PENMRC + PENMD) / LHVAP; // (mm d-1)
+        PTRAN = Math.max(0.0, PTRAN - 0.5 * RNINTC);                  // (mm d-1)
+      
+        //  fin PENMAN();    
+            
+
+   // Resources
+
+
+           // Light();
+               
+        if (DAYL > 0.0)
+        {
+            PARAV = PAR * (Math.pow(1.0, 6.0) / (24.0 * 3600.0)) / DAYL;
+        }
+        else
+        {
+            PARAV = 0.0;
+        }
+
+        PARINT = PAR * (1.0 - Math.exp(-1.0 * K * LAI));
+        DTRINT = DTR * (1.0 - Math.exp(-0.75 * K * LAI));
+
+        // fin Light();
+            
+            
+         //   EVAPTRTRF();
+        
+        var AVAILF, FR, WAAD, WCL, WCCR;
+
+        if (Fdepth < ROOTD)
+        {
+            WCL = WAL * 0.001 / (ROOTD - Fdepth);
+        }
+        else
+        {
+            WCL = 0.0;                                                 // (m3 m-3)
+        }
+
+        WAAD = 1000.0 * WCAD * (ROOTD - Fdepth);                          // (mm)
+        EVAP = PEVAP * Math.max(0.0, Math.min(1.0, (WCL - WCAD) / (WCFC - WCAD)));      // (mm d-1)
+        WCCR = WCWP + Math.max(0.01, PTRAN / (PTRAN + TRANCO) * (WCFC - WCWP)); // (m3 m-3)
+
+        if (WCL > WCCR)
+        {
+            FR = Math.max(0.0, Math.min(1.0, (WCST - WCL) / (WCST - WCWET)));
+        }
+        else
+        {
+            FR = Math.max(0.0, Math.min(1.0, (WCL - WCWP) / (WCCR - WCWP)));
+        }
+        // (mm mm-1)
+        TRAN = PTRAN * FR;                                             // (mm d-1)
+
+        if (EVAP + TRAN > 0.0)
+        {
+            AVAILF = Math.min(1.0, ((WAL - WAAD) / DELT) / (EVAP + TRAN));
+        }
+        else
+        {
+            AVAILF = 0.0;                                             // (mm mm-1)
+        }
+
+        EVAP = EVAP * AVAILF;                                          // (mm d-1)
+        TRAN = TRAN * AVAILF;                                         // (mm d-1)
+
+        if (PTRAN > 0.0)
+        {
+            TRANRF = TRAN / PTRAN;                     // (-)
+        }
+        else
+        {
+            TRANRF = 1.0;                                                  // (-)
+        }
+        
+         //   fin EVAPTRTRF();   
+            
+            
+            
+        //    ROOTDG();
+            
+            var WCL;
+
+        if (Fdepth < ROOTD)
+        {
+            WCL = WAL * 0.001 / (ROOTD - Fdepth);
+        }
+        else
+        {
+            WCL = 0.0;                                 // (m3 m-3)
+        }
+
+        if ((ROOTD < ROOTDM) && (WCL > WCWP))
+        {
+            RROOTD = Math.min(RRDMAX, (ROOTDM - ROOTD) / DELT);
+        }
+        else
+        {
+            RROOTD = 0.0;
+        }
+
+        EXPLOR = 1000.0 * RROOTD * WCFC;
+            //    fin ROOTDG();
+        
+            
+
+    // Soil
+
+            
+        //    FRDRUNIR();
+  
+        var INFILTOT, WAFC, WAST;
+
+        WAFC = 1000.0 * WCFC * Math.max(0.0, (ROOTD - Fdepth));                     // (mm)
+        WAST = 1000.0 * WCST * Math.max(0.0, (ROOTD - Fdepth));                     // (mm)
+        INFILTOT = INFIL + poolDrain;
+
+
+        if (Fdepth < ROOTD)
+        {
+            FREEZEL = Math.max(0.0, Math.min(WAL / DELT + (INFILTOT - EVAP - TRAN), (Frate / (ROOTD - Fdepth)) * WAL));     // (mm d-1) 
+        }
+        else
+        {
+            FREEZEL = 0.0;                                                                    // (mm d-1)
+        }
+
+        if ((Fdepth > 0.0) && (Fdepth <= ROOTD))
+        {
+            THAWS = Math.max(0.0, Math.min(WAS / DELT, -Frate * WAS / Fdepth));    // (mm d-1)
+        }
+        else
+        {
+            THAWS = 0.0;                                                                     // (mm d-1)
+        }
+        DRAIN = Math.max(0.0, Math.min(DRATE, (WAL - WAFC) / DELT + (INFILTOT - EVAP - TRAN - FREEZEL + THAWS)));    // (mm d-1)
+        RUNOFF = Math.max(0.0, (WAL - WAST) / DELT + (INFILTOT - EVAP - TRAN - FREEZEL + THAWS - DRAIN));         // (mm d-1)
+        IRRIG = IRRIGF * ((WAFC - WAL) / DELT - (INFILTOT - EVAP - TRAN - FREEZEL + THAWS - DRAIN - RUNOFF)); // (mm d-1)
+    
+            //    fin FRDRUNIR();
+            
+            
+            
+          //  O2status();
+         
+        FO2 = O2 / (ROOTD * FGAS * 1000.0 / 22.4);
+
+     
+        //  fin O2status();
+            
+            
+
+ // Plant
+
+       
+        //   Harvest();
+            
+                            
+                                                                                                                                       
+        var CLA_I, HARVFR, TV1;
+              
+        HARV   = 0; 
+        NOHARV = 1;
+
+           if(doy == cosecha) // DIA de COSECHA
+           {
+        HARV   = 1; 
+        NOHARV = 0;
+
+           }
+
+        FRACTV = TILV / (TILG2 + TILV);
+        CLA_I   = FRACTV * CLAIV;
+
+        if (LAI <= CLA_I) 
+        {
+          HARVFR = 0.0;
+        }
+         else
+        {
+          HARVFR = 1.0 - CLA_I / LAI;
+        }
+
+       HARVLA  = (HARV * LAI * HARVFR) / DELT;
+       HARV_LV = (HARV * CLV * HARVFR) / DELT;
+       HARVPH  = (HARV * PHEN)        / DELT;
+       TV1     = (HARVFR * FRACTV) + (1.0 - FRACTV) * HAGERE;
+       HARV_RE = (HARV * TV1 * CRES)   / DELT;
+       HARV_ST = (HARV * CST)         / DELT;
+       GSTUB   = HARV_ST * (1.0 - HAGERE);
+       HARVTILG2 = (HARV * TILG2)     / DELT;
+  
+        //   fin Harvest();
+        
+        
+            
+        //   Biomass();
+            
+           
+      CRESMX = COCRESMX * (CLV + CRES + CST);
+      RESNOR = Math.max(0.0, Math.min(1.0, CRES/CRESMX ));
+ 
+        //   fin Biomass();
+        
+            
+            
+        //   Phenology();
+   
+
+    GPHEN = Math.max(0.0, (DAVTMP-0.01) * 0.000144 * 24.0 * (Math.min(DAYLP,DAYL)-0.24) ); 
+    DPHEN = 0.0;
+
+        if (DAYL < DAYLB) 
+        {
+            DPHEN = PHEN / DELT;
+        }
+            
+        PHENRF = (1.0 - PHEN)/(1.0 - PHENCR);
+
+        if (PHENRF > 1.0) 
+        {
+            PHENRF = 1.0;
+        }
+ 
+        if (PHENRF < 0.0) 
+        {
+            PHENRF = 0.0;
+        }
+
+        DAYLGE = Math.max(0.0, Math.min(1.0, (DAYL - DAYLB) / (DLMXGE - DAYLB)));
+
+        //   fin Phenology();
+   
+          
+            
+          // Foliage1();
+     
+
+        var EFFTMP, SLAMIN; 
+
+        EFFTMP = Math.max(TBASE, DAVTMP); 
+        LERV   = Math.max(0.0,        (-0.76 + 0.52*EFFTMP)/1000.0); 
+        LERG   = DAYLGE * Math.max(0.0, (-5.46 + 2.80*EFFTMP)/1000.0);
+        SLAMIN = SLAMAX * FSLAMIN;
+        SLANEW = SLAMAX - RESNOR * (SLAMAX - SLAMIN);
+   
+        // fin Foliage1();
+            
+            
+         //  LUECO2TM();
+          
+////=============================================================================
+//// Calculate LUEMXQ (mol CO2 mol-1 PAR quanta)
+//// Inputs : PARAV (micromol PAR quanta m-2 s-)
+////=============================================================================
+      
+          
+        var CO2I, EAKMC, EAKMO, EAVCMX, EFF, GAMMAX, KC25, KMC, KMC25;
+        var KMO, KMO25, KOKC, PMAX, R, RUBISCN, T, TMPFAC, VCMAX;
+       
+
+        T      = DAVTMP;                                                      //(degC)  
+        RUBISCN = RUBISC * (Math.pow(1.0, 6.0)/550000.0);                 
+        EAVCMX =  68000.0;                                                        //(J mol-1)
+        EAKMC  =  65800.0;                                                         //(J mol-1)
+        EAKMO  =   1400.0;                                                        //(J mol-1)
+        KC25   =     20.0;                                                        //(mol CO2 mol-1 Rubisco s-1)
+        KMC25  =    460.0;                                                         //(ppm CO2)
+        KMO25  =     33.0;                                                        //(% O2)
+        KOKC   =      0.21;                                                    //(-)
+        O2     =     21.0;                                                        //(% O2)
+        R      =       8.314;                                                   //(J K-1 mol-1)
+        CO2I   = 0.7 * CO2A;                                              //(ppm CO2)
+        VCMAX  = RUBISCN * KC25 * Math.exp((1.0/298.0-1.0/(T+273.0))*EAVCMX/R);        //(micromol CO2 m-2 s-1)
+        KMC    =           KMC25 * Math.exp((1.0/298.0-1.0/(T+273.0))*EAKMC /R);                 //(ppm CO2)
+        KMO    =           KMO25 * Math.exp((1.0/298.0-1.0/(T+273.0))*EAKMO /R);                  //(% O2)
+        GAMMAX = 0.5 * KOKC * KMC * O2 / KMO ;                                 //(ppm CO2)
+        PMAX   = VCMAX * (CO2I-GAMMAX) / (CO2I + KMC * (1.0+O2/KMO));             //(micromol CO2 m-2 s-1)
+        TMPFAC = Math.max(0.0, Math.min(1.0, (T + 4.0) / 5.0));                        //(-)
+        EFF    = TMPFAC * (1.0/2.1) * (CO2I-GAMMAX) / (4.5*CO2I+10.5*GAMMAX); //(mol CO2 mol-1 PAR quanta)
+        LUEMXQ = EFF*PMAX*(1.0+KLUETILG*(1.0-FRACTV)) / (EFF*K*PARAV + PMAX); //(mol CO2 mol-1 PAR quanta)Aug 8    
+  
+         //  fin LUECO2TM();
+        
+        
+   
+            
+        //   HardeningSink();
+              
+       var doySinceStart, reHardRedStart;
+
+            reHardRedStart = reHardRedEnd - reHardRedDay % 365.0; /// OJOOO verificar que si es modulo
+            doySinceStart  = doy - reHardRedStart % 365.0;
+        
+
+
+
+
+        if ( doySinceStart < (reHardRedDay+0.5*(365.0 - reHardRedDay)) ) 
+        {
+            reHardPeriod = Math.max( 0.0, 1.0 - doySinceStart/reHardRedDay );
+        }
+        else
+        {
+            reHardPeriod = 1.0;
+        }
+
+
+        if ((Tsurf > THARDMX) || (LT50 < LT50MN))  
+        {
+            RATEH = 0.0;
+        }
+
+        else
+        {
+         RATEH = reHardPeriod * Hparam * (THARDMX-Tsurf) * (LT50-LT50MN);
+        }
+
+    
+        RESPHARDSI = RATEH * CLV * KRESPHARD * Math.max(0.0, Math.min(1.0, RESNOR * 5.0)); 
+ 
+      //   fin HardeningSink();   
+        
+            
+       //    Growth();
+            
+    
+
+    var CSTAV,GLAISI,SOURCE,SINK1T;
+
+  PHOT     = PARINT * TRANRF * 12.0 * LUEMXQ * NOHARV;
+  RESMOB   = (CRES * NOHARV / TCRES) * Math.max(0.0,Math.min( 1.0,DAVTMP/5.0));
+  SOURCE   = RESMOB + PHOT;
+  RESPHARD = Math.min(SOURCE,RESPHARDSI);
+  ALLOTOT  = SOURCE - RESPHARD;
+  GRESSI   = 0.5 * (RESMOB + Math.max(0.0, (CRESMX - CRES) / DELT));
+
+  if (TILG2 != 0.0) 
+  {
+      CSTAV = CST / TILG2;
+  }
+  else 
+  {
+     CSTAV  = 0.0;
+  }
+  
+  SINK1T   = Math.max(0.0, 1.0 - (CSTAV/CSTAVM)) * SIMAX1T;
+  NELLVG   = PHENRF * NELLVM ;
+  GLAISI = ((LERV * TILV * NELLVM * LFWIDV) + (LERG * TILG2 * NELLVG * LFWIDG)) * SHAPE * TRANRF;
+  GLV_SI   = (GLAISI * NOHARV / SLANEW) / YG;
+  GST_SI = (SINK1T * TILG2 * TRANRF * NOHARV) / YG;
+
+       //    Growth();     
+        
+        
+  
+     //   Allocation();
+        
+       
+     var GSHSI, ALLOSH, ALLORT, ALLOLV, ALLOST;
+     GSHSI = GLV_SI + GST_SI;
+
+     if (DAYLGE >= 0.1) 
+     {
+     // Situation 1: Growth has priority over storage (spring and growth period)
+       // Calculate amount of assimilates allocated to shoot
+       ALLOSH = Math.min( ALLOTOT, GSHSI );
+       // Calculate amount of assimilates allocated to reserves    
+       GRES   = Math.min( ALLOTOT - ALLOSH, GRESSI);
+     }
+     else
+     {
+     // Situation 2: Storage has priority over shoot (autumn)
+       // Calculate amount of assimilates allocated to reserves
+       GRES   = Math.min( ALLOTOT, GRESSI );
+       // Calculate amount of assimilates allocated to shoot
+       ALLOSH = Math.min( ALLOTOT - GRES, GSHSI );
+     }
+
+     // All surplus carbohydrate goes to roots
+     ALLORT  = ALLOTOT - ALLOSH - GRES;
+       
+       if (GSHSI == 0.0) 
+       {
+           GSHSI = 1.0;
+       }
+
+     ALLOLV  = GLV_SI * (ALLOSH / GSHSI);
+     ALLOST  = GST_SI * (ALLOSH / GSHSI);
+     GLV     = ALLOLV * YG;
+     GST     = ALLOST * YG;
+     GRT     = ALLORT * YG;
+     RESPGSH = (ALLOLV + ALLOST) * (1.0 - YG);
+     RESPGRT = ALLORT * (1.0 - YG);
+
+//   fin Allocation();
+        
+   
+            
+        //   PlantRespiration();
+    
+        
+    var fAer;
+
+    fAer      = Math.max(0.0,Math.min(1.0, FO2/FO2MX ));
+    RplantAer = fAer * ( RESPGRT + RESPGSH + RESPHARD );
+  
+         // fin  PlantRespiration();
+        
+        
+                    
+       //    Senescence();
+   
+       
+     var RDRS, TV1, TV2;
+
+  //  AnaerobicDamage();
+  
+                    
+     if (PERMgas == 0.0)  
+     {
+       dTANAER = 1.0;
+     }
+     else
+     {
+         dTANAER = -TANAER / DELT;
+     }
+
+     LD50 = LDT50A + LDT50B * LT50;
+
+     if (TANAER > 0.0) 
+     {
+         RDRTOX = KRDRANAER / (1.0 + Math.exp(-KRDRANAER * (TANAER - LD50)));
+     }
+     else
+     {
+       RDRTOX = 0.0;
+     }
+     
+    //  fin AnaerobicDamage();     
+            
+        
+            
+   // Hardening();
+ 
+      
+     var RATED,RSR3H,RSRDAY;
+
+     RSR3H = 1.0 / (1.0 + Math.exp(-KRSR3H * (Tsurf - LT50)));
+     // RDRFROST should be less than 1 to avoid numerical problems
+     // (loss of all biomass but keeping positive reserves). We cap it at 0.5.
+     RSRDAY     = RSR3H; // In previous versions we had RSRDAY = RSR3H^8 which understimated survival
+     RDRFROST   = Math.min( 0.5, 1.0 - RSRDAY );
+     RATED      = Math.min(Dparam * (LT50MX - LT50) * (Tsurf + TsurfDiff), (LT50MX - LT50) / DELT);
+     DeHardRate = Math.max(0.0,Math.min( RATEDMX, RATED ));
+     HardRate   = RESPHARD / (CLV * KRESPHARD);
+ 
+     // fin Hardening();       
+            
+            
+
+    if (LAI < LAICR) 
+    {
+         TV1 = 0.0;
+    }
+    else 
+    {
+        TV1 = RDRSCO * (LAI - LAICR) / LAICR;
+    }
+
+    RDRS    = Math.min(TV1, RDRSMX);
+    RDRT    = Math.max(RDRTMIN, RDRTEM * Tsurf);
+    TV2     = NOHARV * Math.max(RDRS, RDRT, RDRFROST, RDRTOX);
+    TV2TIL  = NOHARV * Math.max(RDRS, RDRFROST, RDRTOX);
+    DLAI    = LAI      * TV2;
+    DLV     = CLV      * TV2;
+    DSTUB   = CSTUB     * RDRSTUB;
+    DTILV   = TILV     * TV2TIL;
+    DRT     = CRT      * RDRROOT;
+    
+         //  fin  Senescence();
+        
+            
+         //  Foliage2();
+  
+
+      var RGRTV,RGRTVG1,TGE,TV1,TV2;
+
+      GLAI  = SLANEW * GLV;
+
+      if (Tsurf < TBASE) 
+      {
+        TV1   = 0.0;
+      }
+      else 
+      {
+        TV1   = Tsurf/PHY;
+      }
+  
+      RLEAF   = TV1 * NOHARV * TRANRF * DAYLGE * ( FRACTV + PHENRF*(1.0-FRACTV) );
+
+      TV2 = LAITIL - LAIEFT * LAI;
+
+        if (TV2 > FSMAX) 
+        {
+            TV2 = FSMAX;
+        }
+        if (TV2 < 0.0) 
+        {
+            TV2 = 0.0;
+         }
+      RGRTV     = Math.max( 0.0 , TV2 * RESNOR * RLEAF );
+      GTILV     = TILV * RGRTV;
+
+
+      TGE       = Math.max(0.0, 1.0 - (Math.abs(DAVTMP - TOPTGE)) / (TOPTGE - TBASE));
+      RGRTVG1   = Math.min(1.0 - TV2TIL, NOHARV * DAYLGE * TGE * RGENMX) * VERN;
+      TILVG1    = TILV * RGRTVG1;
+
+      TILG1G2 = TILG1 * RGRTG1G2;
+        
+     /* if (DAYL > DAYLG1G2)  /// No se cumple, el DAYl es siempre igual
+      {
+         TILG1G2 = TILG1 * RGRTG1G2;
+      }
+      else
+      {
+        TILG1G2 = 0.0f;
+        }*/
+
+//  fin Foliage2();
+        
+          
+  // Soil 2
+
+            
+       //     O2fluxes();
+ 
+               
+        var O2MX;
+
+        O2OUT = RplantAer * KRTOTAER * 1.0 / 12.0 * 1.0;
+        O2MX = FO2MX * ROOTD * FGAS * 1000.0 / 22.4;
+        O2IN = PERMgas * ((O2MX - O2) + O2OUT * DELT);
+     
+             // fin   O2fluxes();
+ 
+            
+            
+
+    //================
+   // Outputs
+  //================
+
+            y[day, 3] = doy;        // day
+            y[day, 4] = DAVTMP;     // Daily average temperature (°C)
+            y[day, 5] = Math.round(CLV * 10)/10;        // Weight of leaves (gC m-2)  
+            y[day, 6] = Math.round(CLVD* 10)/10;       // Weight of leaves died since start simulation (gC m-2)
+            y[day, 7] = YIELD_LAST;
+            y[day, 8] = CRES;                           // Weight of reserves (gC m-2)
+            y[day, 9] = CRT;                            // Weight of roots (gC m-2)
+            y[day, 10] = Math.round(CST* 10)/10;       // Weight of stems (gC m-2)
+            y[day, 11] = CSTUB;                     // Weight of stubble (gC m-2)
+
+            y[day, 12] = DRYSTOR;   // Snow amount as SWE (Soil Water Equivalent) (mm)
+            y[day, 13] = Fdepth;    // Soil frost layer depth (m)       
+            y[day, 14] = LAI;       // Leaf area index (m2 leaf m-2)
+            y[day, 15] = LT50;      // Temperature that kills half the plants in a day (°C)
+            y[day, 16] = O2;        // Soil oxygen content (mol m-2)
+            y[day, 17] = PHEN;      // Phenological stage
+            y[day, 18] = ROOTD;     // Rooting depth (m)
+            y[day, 19] = Sdepth;    // Snow depth (m)
+            y[day, 20] = TANAER;    // Time since start anaerobic conditions (d)
+            y[day, 21] = TILG1 + TILG2; //
+            y[day, 22] = TILV;      // Non-elongating tiller density (m-2)
+            y[day, 23] = WAL;       // Soil water amount: liquid (mm)
+            y[day, 24] = WAPL;      // Pool water amount: liquid (mm)
+            y[day, 25] = WAPS;      // Pool water amount: solid (=ice) (mm)
+            y[day, 26] = WAS;       // Soil water amount: solid (=ice) (mm)
+            y[day, 27] = WETSTOR;   // Liquid water in snow (mm)    
+
+            // Extra derived variables for calibration
+
+            
+            y[day, 28] = Math.round(((CLV + CST + CSTUB) / 0.45 + CRES / 0.40)*10)/10;   // "DM" = Aboveground dry matter in g m-2
+            y[day, 29] = (CRES / 0.40) / y[day, 28];                 // "RES"     = Reserves in g g-1 aboveground dry matter
+            y[day, 30] = LERG;                         //
+            y[day, 31] = NELLVG;                       //
+            y[day, 32] = RLEAF;                        //
+            y[day, 33] = LAI / (CLV / 0.45);          // "SLA"     = m2 leaf area g-1 dry matter vegetative tillers
+            y[day, 34] = TILG1 + TILG2 + TILV;          // "TILTOT"  = Total tiller number in # m-2
+            y[day, 35] = (TILG1 + TILG2) / (TILG1 + TILG2 + TILV); // "FRTILG"  = Fraction of tillers that is generative
+            y[day, 36] = TILG1 / (TILG1 + TILG2 + TILV); // "FRTILG1" = Fraction of tillers that is in TILG1
+            y[day, 37] = TILG2 / (TILG1 + TILG2 + TILV);// "FRTILG2" = Fraction of tillers that is in TILG2
+            y[day, 38] = RDRT;
+            y[day, 39] = VERN;
+            
+            /*OUT*/ 
+            CLV = CLV + GLV - DLV - HARV_LV;
+            
+   
+            /*OUT*/
+            CST = CST + GST - HARV_ST;
+            
+
+            /*OUT*/
+            CSTUB = CSTUB + GSTUB - DSTUB;
+          
+
+            /*OUT*/
+            CRES = CRES + GRES - RESMOB - HARV_RE;
+        
+            
+            CLVD = CLVD + DLV;
+            YIELD = (HARV_LV + HARV_ST * HAGERE) / 0.45 + HARV_RE / 0.40;
+
+            if (YIELD > 0.0)
+            {
+                YIELD_LAST = YIELD;
+            }
+
+          
+            CRT = CRT + GRT - DRT;
+            DRYSTOR = DRYSTOR + reFreeze + Psnow - SnowMelt;
+            Fdepth = Fdepth + Frate;
+            LAI = LAI + GLAI - DLAI - HARVLA;
+            LT50 = LT50 + DeHardRate - HardRate;
+            O2 = O2 + O2IN - O2OUT;
+            PHEN = Math.min(1, PHEN + GPHEN - DPHEN - HARVPH);
+            ROOTD = ROOTD + RROOTD;
+            Sdepth = Sdepth + Psnow / RHOnewSnow - PackMelt;
+            TANAER = TANAER + dTANAER;
+            TILG1 = TILG1 + TILVG1 - TILG1G2;
+            TILG2 = TILG2 + TILG1G2 - HARVTILG2;
+            TILV = TILV + GTILV - TILVG1 - DTILV;
+
+            if (DAVTMP < TVERN)
+            {
+                VERN = 1;
+            }
+
+            WAL = WAL + THAWS - FREEZEL + poolDrain + INFIL + EXPLOR + IRRIG - DRAIN - RUNOFF - EVAP - TRAN;
+            WAPL = WAPL + THAWPS - FREEZEPL + poolInfil - poolDrain;
+            WAPS = WAPS - THAWPS + FREEZEPL;
+            WAS = WAS - THAWS + FREEZEL;
+            WETSTOR = WETSTOR + Wremain - WETSTOR;
+
+        
+        
+            hojas  [day]        = (y[day, 5] * calculated_acres)/100; 
+            hojas_muertas [day] = (y[day, 6] * calculated_acres)/100;
+            tallos [day]        = (y[day, 10] * calculated_acres)/100;
+        
+        
+        }     
+     
+        
+    }
+    
+       
+   // TERMINA BASGRA
+    
+    
+    /// inicia grafica 
+    
+    function grafica()
+    {
+    var d1 = [];
+    var d2 = [];
+    var d3 = [];
+          
+    $(function () {
+    
+   
+	for (var i = 1; i < hojas.length - 1; i += 1) 
+        {
+		    d1.push([i, hojas[i]]);
+            d2.push([i, hojas_muertas[i]]);
+            d3.push([i, tallos[i]])
+            
+        }
+        
+        
+    }); 
+
+       
+       
+		$.plot("#placeholder", 
+               [
+            {label: "Hojas", data: d1},
+            {label: "Hojas Muertas", data: d2},
+            {label: "Tallos", data: d3}
+                ], 
+               {
+			series: 
+            {
+				lines: { show: true },
+			},
+	
+			grid: 
+            {
+				backgroundColor: { colors: [ "#fff", "#eee" ] },
+				borderWidth: 
+                {
+					top: 1,
+					right: 1,
+					bottom: 2,
+					left: 2
+				}
+			}
+		});
+
+     
+        
+  document.getElementById("hojas").innerHTML = Math.round( hojas[hojas.length - 2]);
+  document.getElementById("hojas_M").innerHTML = Math.round(hojas_muertas[hojas.length - 2]);
+  document.getElementById("tallos").innerHTML = Math.round(tallos[hojas.length - 2]);
+    
+    }
+      
+    /// Termina grafica
+     
+</script>
+
+    
+
+
+</html>

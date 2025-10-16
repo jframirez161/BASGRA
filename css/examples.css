@@ -1,0 +1,215 @@
+* {	padding: 0; margin: 0; vertical-align: top; }
+
+body {
+	margin:0;
+    padding:0;
+    background: url(background.png) repeat-x;
+	font-family:Georgia, Arial, Times, serif;
+    font-size:20px;
+    color:#000000;
+}
+
+
+
+a {	color: #069; }
+a:hover { color: #28b; }
+
+h1 {font-size:30px; margin:0; padding:0 5px; color:#006600; font-weight:400;}
+h2 {font-size:18px; margin:0; padding:0 5px; color:#6633FF; font-weight:400;}
+h3 {font-size:16px; margin:0; padding:0 5px; color:#006600; font-weight:800;}
+p { margin:20px; }
+img { border:none; }
+dl { margin-top:0; }
+
+
+
+button {
+	font-size: 18px;
+	padding: 1px 7px;
+}
+
+input {
+	font-size: 18px;
+}
+
+input[type=checkbox] {
+	margin: 7px;
+}
+
+
+/*Layout Styling*/
+/***************************************************************************/
+/*Head Section*/
+
+#head {
+width:100%;
+height:150px;
+margin:0;
+background:#FFFFFF;
+}
+
+#head h1 {
+margin:0;
+padding:40px 0 0 30px;
+
+}
+
+
+
+
+#header {
+	position: relative;
+	width: 900px;
+	margin: auto;
+}
+
+#header h2 {
+	margin-left: 10px;
+	vertical-align: middle;
+	font-size: 42px;
+	font-weight: bold;
+	text-decoration: none;
+	color: #000;
+}
+
+#content {
+	width: 1500px;
+	margin: 0 auto;
+	padding: 10px 5px 15px 0;
+
+    display:block;
+z-index:1;
+border-left: #FFFFFF solid 200px;
+border-right: #FFFFFF solid 150px;
+padding: 10px 5px 15px 0;
+position:relative;
+background: #FFFFFF url(../Images/StyleImages/back3.jpg) no-repeat bottom right;
+min-height:520px;
+}
+
+
+
+
+#footer {
+	margin-top: 25px;
+	margin-bottom: 10px;
+	text-align: center;
+	font-size: 12px;
+	color: #999;
+}
+
+.demo-container {
+	box-sizing: border-box;
+	width: 600px;
+	height: 400px;
+	padding: 20px 15px 15px 15px;
+	margin: 0px auto 0px auto;
+	border: 1px solid #ddd;
+	background: #fff;
+	background: linear-gradient(#f6f6f6 0, #fff 50px);
+	background: -o-linear-gradient(#f6f6f6 0, #fff 50px);
+	background: -ms-linear-gradient(#f6f6f6 0, #fff 50px);
+	background: -moz-linear-gradient(#f6f6f6 0, #fff 50px);
+	background: -webkit-linear-gradient(#f6f6f6 0, #fff 50px);
+	box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+	-o-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+	-ms-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+	-moz-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+	-webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/***************************************************************************/
+/* Left Column */
+
+#left_col {
+position:relative;
+float:left;
+background: #FFFFFF;
+width:100px;
+height:10px;
+z-index:50;
+}
+
+
+
+
+/***************************************************************************/
+/* Right Column */
+
+#right_col {
+position:relative;
+float:right;
+background: #FFFFFF;
+width:10px;
+height:10px;
+z-index:50;
+}
+
+#right_col p {
+margin:10px;
+}
+
+
+
+.demo-placeholder {
+	width: 100%;
+	height: 100%;
+	font-size: 20px;
+	line-height: 1.2em;
+}
+
+.legend table {
+	border-spacing: 5px;
+}
+
+
+/****************************** Module Styles **********************************/
+/*Calculator Page Styling------------------------*/
+
+#calc_table table { /*Esta seccion es el style de las tablas*/
+background: #F9F9F9;
+width:400px;
+font-size:16px;
+font-family:Arial, Helvetica, sans-serif, Garamond;
+border: #CCCCCC 5px solid;
+margin: 0 0 20px 0;
+}
+
+#calculator td { /*Esta seccion es el style de las lineas en las tablas*/
+background: #FCFCFC;
+text-align:left;
+padding:0 0 0 3px;
+}
+
+.theader, #calculator th {
+text-align:left;
+
+
+}
+
+.inputcal { /*Esta seccion es el tamaño de la casillas para ingresar los datos en las tablas*/
+width:100px;
+background:#FFFBF2;
+}
+
+.inputcal1 { /*Esta seccion es el tamaño de la casillas para ingresar los datos en las tablas*/
+width:0px;
+height:0px;
+background:#FFFBF2;
+}
+
+.inputtd {
+padding:0px;
+}
+
+.calsp {
+font-size:11px;
+}
+
+#su_f {
+width:100px;
+margin-top:-1145px;
+float:right;
+position:relative;
+margin-right:25px;
+}
