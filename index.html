@@ -23,21 +23,145 @@
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
         <link href='http://fonts.googleapis.com/css?family=Dosis:400,700' rel='stylesheet' type='text/css'>
 
-        <!-- Bootsrap -->
-        <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+<style>
+/* Basic Grid System */
+.container {
+    width: 100%;
+    max-width: 1170px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
 
-        <!-- Font awesome -->
-        <link rel="stylesheet" href="assets/css/font-awesome.min.css">
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -15px;
+}
 
-        <!-- Owl carousel -->
-        <link rel="stylesheet" href="assets/css/owl.carousel.css">
+.col-sm-6, .col-xs-12, .col-md-4 {
+    padding: 0 15px;
+}
 
-        <!-- Template main Css -->
-        <link rel="stylesheet" href="assets/css/style.css">
-        
-        <!-- Modernizr -->
-        <script src="assets/js/modernizr-2.6.2.min.js"></script>
+.col-sm-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
 
+.col-md-4 {
+    flex: 0 0 33.333%;
+    max-width: 33.333%;
+}
+
+@media (max-width: 768px) {
+    .col-sm-6, .col-md-4 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+}
+
+/* Navigation */
+.navbar {
+    width: 100%;
+}
+
+.navbar-header {
+    display: inline-block;
+}
+
+.navbar-brand {
+    display: inline-block;
+    padding: 15px;
+}
+
+.navbar-collapse {
+    display: inline-block;
+}
+
+.nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav li {
+    display: inline-block;
+}
+
+.nav li a {
+    display: block;
+    padding: 20px 15px;
+    text-decoration: none;
+    color: #1e3c72;
+    font-weight: 600;
+}
+
+.nav li a:hover,
+.nav li a.is-active {
+    color: #2a5298;
+}
+
+.pull-right {
+    float: right;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.list-unstyled {
+    list-style: none;
+    padding: 0;
+}
+
+.list-inline li {
+    display: inline-block;
+}
+
+/* Forms */
+.form-control {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #d1d8e0;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+/* Footer */
+.footer-col {
+    margin-bottom: 30px;
+}
+
+.footer-title {
+    margin-bottom: 20px;
+}
+
+.footer-content {
+    font-size: 14px;
+}
+
+/* Clearfix */
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+</style>
 <style>
 #help_div{
 	position:fixed;
@@ -416,14 +540,7 @@ CENTER p {
                        </ul> <!-- /.header-contact  -->                      
                     </div>
                     <div class="col-sm-6 col-xs-12 text-right">
-                        <ul class="list-unstyled list-inline header-social">
-                        <li><a href="#" target="_blank"> <i class="fa fa-facebook"></i></a></li>
-                        <li><a href="#" target="_blank"> <i class="fa fa-twitter"></i></a></li>
-                        <li><a href="#" target="_blank"> <i class="fa fa-google"></i></a></li>
-                        <li><a href="#" target="_blank"> <i class="fa fa-youtube"></i></a></li>
-                        <li><a href="#" target="_blank"> <i class="fa fa fa-pinterest-p"></i></a> </li>
-
-                       </ul> <!-- /.header-social  -->                      
+                        <!-- Social links removed -->
                     </div>
                   </div>
               </div>
@@ -431,7 +548,7 @@ CENTER p {
             <div class="navbar-main">              
               <div class="container">
                 <div class="navbar-header">
-                  <a class="navbar-brand" href="index.html"><img src="assets/images/sadaka-logo.png" alt=""></a>                  
+                  <a class="navbar-brand" href="index.html" style="font-size: 28px; font-weight: 700; color: #1e3c72; text-decoration: none;">BASGRA</a>                  
                 </div>
                 <div id="navbar" class="navbar-collapse collapse pull-right">
                   <ul class="nav navbar-nav">
